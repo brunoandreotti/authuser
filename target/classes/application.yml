@@ -1,5 +1,8 @@
 server:
-  port: 8080
+  port: 8087
+  servlet:
+    context-path: '/ead-authuser'
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ead-authuser
