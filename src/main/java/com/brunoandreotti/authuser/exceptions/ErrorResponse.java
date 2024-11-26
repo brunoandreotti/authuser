@@ -1,18 +1,12 @@
 package com.brunoandreotti.authuser.exceptions;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
-import java.util.HashMap;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Map;
 
-@AllArgsConstructor
-@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
-
-    private int errorCode;
-    private String errorMessage;
-    private Map<String, String> errorDetails;
+public record ErrorResponse(int errorCode,
+                            String errorMessage,
+                            Map<String, String> errorDetails) {
 }
