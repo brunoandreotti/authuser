@@ -6,6 +6,7 @@ import com.brunoandreotti.authuser.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUserById(@PathVariable UUID userId,
                                                  @RequestBody
+                                                 @Validated(UserRecordDTO.UserView.UserPut.class)
                                                  @JsonView(UserRecordDTO.UserView.UserPut.class)
                                                  UserRecordDTO userRecordDTO) {
 
@@ -50,6 +52,7 @@ public class UserController {
     @PutMapping("/{userId}/password")
     public ResponseEntity<Object> updateUserPasswordById(@PathVariable UUID userId,
                                                          @RequestBody
+                                                         @Validated(UserRecordDTO.UserView.PasswordPut.class)
                                                          @JsonView(UserRecordDTO.UserView.PasswordPut.class)
                                                          UserRecordDTO userRecordDTO) {
         userService.updateUserPassword(userId, userRecordDTO);
@@ -59,6 +62,7 @@ public class UserController {
     @PutMapping("/{userId}/image")
     public ResponseEntity<Object> updateUserImageById(@PathVariable UUID userId,
                                                       @RequestBody
+                                                      @Validated(UserRecordDTO.UserView.ImagePut.class)
                                                       @JsonView(UserRecordDTO.UserView.ImagePut.class)
                                                       UserRecordDTO userRecordDTO) {
 

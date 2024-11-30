@@ -5,6 +5,7 @@ import com.brunoandreotti.authuser.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody
+                                               @Validated(UserRecordDTO.UserView.RegistrationPost.class)
                                                @JsonView(UserRecordDTO.UserView.RegistrationPost.class)
                                                UserRecordDTO userRecordDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userRecordDTO));
