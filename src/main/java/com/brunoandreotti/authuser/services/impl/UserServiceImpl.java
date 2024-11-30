@@ -1,11 +1,17 @@
 package com.brunoandreotti.authuser.services.impl;
 
+import com.brunoandreotti.authuser.dtos.UserRequestDTO;
+import com.brunoandreotti.authuser.enums.UserStatus;
+import com.brunoandreotti.authuser.enums.UserType;
 import com.brunoandreotti.authuser.exceptions.NotFoundException;
 import com.brunoandreotti.authuser.models.UserModel;
 import com.brunoandreotti.authuser.repository.UserRepository;
 import com.brunoandreotti.authuser.services.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,5 +37,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(UUID userId) {
          userRepository.delete(findById(userId));
+    }
+
+    @Override
+    public UserModel registerUser(UserRequestDTO userRequestDTO) {
+        var userModel = new UserModel();
+        BeanUtils.copyProperties(userRequestDTO, userModel);
+
+        userModel.setUserStatus(UserStatus.ACTIVE);
+        userModel.setUserType(UserType.USER);
+
+        userModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        return userRepository.save(userModel);
     }
 }
