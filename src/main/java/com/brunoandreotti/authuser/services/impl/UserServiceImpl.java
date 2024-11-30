@@ -1,6 +1,6 @@
 package com.brunoandreotti.authuser.services.impl;
 
-import com.brunoandreotti.authuser.dtos.UserRequestDTO;
+import com.brunoandreotti.authuser.dtos.UserRecordDTO;
 import com.brunoandreotti.authuser.enums.UserStatus;
 import com.brunoandreotti.authuser.enums.UserType;
 import com.brunoandreotti.authuser.exceptions.NotFoundException;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -32,19 +33,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel findById(UUID userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
     @Override
     public void deleteById(UUID userId) {
-         userRepository.delete(findById(userId));
+        userRepository.delete(findById(userId));
     }
 
     @Override
-    public UserModel registerUser(UserRequestDTO userRequestDTO) {
+    public UserModel registerUser(UserRecordDTO userRecordDTO) {
 
-        String username = userRequestDTO.username();
-        String email = userRequestDTO.email();
+        String username = userRecordDTO.username();
+        String email = userRecordDTO.email();
 
         if (userRepository.existsByUsername(username)) {
             throw new DataAlreadyExistsException(String.format("User with username '%s' already exists! ", username));
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
 
         var userModel = new UserModel();
-        BeanUtils.copyProperties(userRequestDTO, userModel);
+        BeanUtils.copyProperties(userRecordDTO, userModel);
 
         userModel.setUserStatus(UserStatus.ACTIVE);
         userModel.setUserType(UserType.USER);
@@ -65,6 +66,41 @@ public class UserServiceImpl implements UserService {
         userModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
         return userRepository.save(userModel);
+    }
+
+    @Override
+    public UserModel updateUser(UUID userId, UserRecordDTO userRecordDTO) {
+        var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
+
+        user.setFullName(userRecordDTO.fullName());
+        user.setPhoneNumber(userRecordDTO.phoneNumber());
+        user.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void updateUserPassword(UUID userId, UserRecordDTO userRecordDTO) {
+        var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
+
+        if (!Objects.equals(user.getPassword(), userRecordDTO.oldPassword())) {
+            throw new NotFoundException("Passwords do not match!");
+        }
+
+        user.setPassword(userRecordDTO.password());
+        user.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserModel updateUserImage(UUID userId, UserRecordDTO userRecordDTO) {
+        var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
+
+        user.setImageUrl(userRecordDTO.imageUrl());
+        user.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        return userRepository.save(user);
     }
 
 

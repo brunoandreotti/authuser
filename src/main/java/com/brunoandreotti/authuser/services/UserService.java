@@ -1,6 +1,6 @@
 package com.brunoandreotti.authuser.services;
 
-import com.brunoandreotti.authuser.dtos.UserRequestDTO;
+import com.brunoandreotti.authuser.dtos.UserRecordDTO;
 import com.brunoandreotti.authuser.models.UserModel;
 
 import java.util.List;
@@ -13,5 +13,11 @@ public interface UserService {
 
     void deleteById(UUID userId);
 
-    UserModel registerUser(UserRequestDTO userRequestDTO);
+    UserModel registerUser(UserRecordDTO userRecordDTO);
+
+    UserModel updateUser(UUID userId, UserRecordDTO userRecordDTO);
+
+    void updateUserPassword(UUID userId, UserRecordDTO userRecordDTO);
+
+    UserModel updateUserImage(UUID userId, UserRecordDTO userRecordDTO);
 }
