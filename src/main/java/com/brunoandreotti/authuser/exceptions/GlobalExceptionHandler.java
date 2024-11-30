@@ -13,4 +13,10 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage(), null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
+
+    @ExceptionHandler(DataAlreadyExistsException.class)
+    private ResponseEntity<ErrorResponse> DataAlreadyExistsException(DataAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
 }

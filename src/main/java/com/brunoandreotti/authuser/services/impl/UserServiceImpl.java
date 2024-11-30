@@ -4,6 +4,7 @@ import com.brunoandreotti.authuser.dtos.UserRequestDTO;
 import com.brunoandreotti.authuser.enums.UserStatus;
 import com.brunoandreotti.authuser.enums.UserType;
 import com.brunoandreotti.authuser.exceptions.NotFoundException;
+import com.brunoandreotti.authuser.exceptions.DataAlreadyExistsException;
 import com.brunoandreotti.authuser.models.UserModel;
 import com.brunoandreotti.authuser.repository.UserRepository;
 import com.brunoandreotti.authuser.services.UserService;
@@ -41,6 +42,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel registerUser(UserRequestDTO userRequestDTO) {
+
+        String username = userRequestDTO.username();
+        String email = userRequestDTO.email();
+
+        if (userRepository.existsByUsername(username)) {
+            throw new DataAlreadyExistsException(String.format("User with username '%s' already exists! ", username));
+        }
+
+        if (userRepository.existsByEmail(email)) {
+            throw new DataAlreadyExistsException(String.format("User with email '%s' already exists! ", email));
+        }
+
+
         var userModel = new UserModel();
         BeanUtils.copyProperties(userRequestDTO, userModel);
 
@@ -52,4 +66,6 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(userModel);
     }
+
+
 }
