@@ -9,6 +9,8 @@ import com.brunoandreotti.authuser.models.UserModel;
 import com.brunoandreotti.authuser.repository.UserRepository;
 import com.brunoandreotti.authuser.services.UserService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,6 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserModel> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Page<UserModel> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
@@ -102,6 +109,8 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user);
     }
+
+
 
 
 }
