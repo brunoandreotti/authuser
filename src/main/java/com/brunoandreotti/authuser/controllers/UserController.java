@@ -28,8 +28,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserModel>> getAllUsers(
-            Pageable pageable) {
+    public ResponseEntity<Page<UserModel>> getAllUsers(Pageable pageable) {
 
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(pageable));
     }
