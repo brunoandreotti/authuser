@@ -3,6 +3,7 @@ package com.brunoandreotti.authuser.controllers;
 import com.brunoandreotti.authuser.dtos.UserRecordDTO;
 import com.brunoandreotti.authuser.models.UserModel;
 import com.brunoandreotti.authuser.services.UserService;
+import com.brunoandreotti.authuser.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +29,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserModel>> getAllUsers(Pageable pageable) {
+    public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec, Pageable pageable) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(spec, pageable));
     }
 
     @GetMapping("/{userId}")

@@ -8,9 +8,11 @@ import com.brunoandreotti.authuser.exceptions.DataAlreadyExistsException;
 import com.brunoandreotti.authuser.models.UserModel;
 import com.brunoandreotti.authuser.repository.UserRepository;
 import com.brunoandreotti.authuser.services.UserService;
+import com.brunoandreotti.authuser.specifications.SpecificationTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,8 +36,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserModel> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
+        return userRepository.findAll(spec, pageable);
     }
 
     @Override
