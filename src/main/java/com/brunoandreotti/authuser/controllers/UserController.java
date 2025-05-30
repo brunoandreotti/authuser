@@ -5,6 +5,7 @@ import com.brunoandreotti.authuser.models.UserModel;
 import com.brunoandreotti.authuser.services.UserService;
 import com.brunoandreotti.authuser.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import java.util.UUID;
 
+@Log4j2
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -38,18 +40,20 @@ public class UserController {
                 user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(user.getId())).withSelfRel());
             }
         }
-
+        log.info("c=UserController m=getAllUsers msg=GET getAllUsers");
         return ResponseEntity.status(HttpStatus.OK).body(userPages);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUserById(@PathVariable UUID userId) {
+        log.info("c=UserController m=getUserById msg=GET getUserById userId={}", userId);
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(userId));
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteUserById(@PathVariable UUID userId) {
         userService.deleteById(userId);
+        log.info("c=UserController m=deleteUserById msg=DELETE deleteUserById userId={}", userId);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
 
@@ -59,7 +63,7 @@ public class UserController {
                                                  @Validated(UserRecordDTO.UserView.UserPut.class)
                                                  @JsonView(UserRecordDTO.UserView.UserPut.class)
                                                  UserRecordDTO userRecordDTO) {
-
+        log.info("c=UserController m=updateUserById msg=PUT updateUserById userId={} userData={}", userId, userRecordDTO);
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, userRecordDTO));
     }
 

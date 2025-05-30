@@ -9,6 +9,7 @@ import com.brunoandreotti.authuser.models.UserModel;
 import com.brunoandreotti.authuser.repository.UserRepository;
 import com.brunoandreotti.authuser.services.UserService;
 import com.brunoandreotti.authuser.specifications.SpecificationTemplate;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Log4j2
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -42,11 +44,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel findById(UUID userId) {
+        log.info("c=UserServiceImpl m=findById msg=Getting user by id userId={}", userId);
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
     @Override
     public void deleteById(UUID userId) {
+        log.info("c=UserController m=deleteById msg=Deleting user by id userId={}", userId);
         userRepository.delete(findById(userId));
     }
 
@@ -57,10 +61,12 @@ public class UserServiceImpl implements UserService {
         String email = userRecordDTO.email();
 
         if (userRepository.existsByUsername(username)) {
+            log.warn("c=UserServiceImpl m=registerUser msg=Username {} already exists", userRecordDTO.username());
             throw new DataAlreadyExistsException(String.format("User with username '%s' already exists! ", username));
         }
 
         if (userRepository.existsByEmail(email)) {
+            log.warn("c=UserServiceImpl m=registerUser msg=Email {} already exists", userRecordDTO.email());
             throw new DataAlreadyExistsException(String.format("User with email '%s' already exists! ", email));
         }
 
@@ -74,7 +80,9 @@ public class UserServiceImpl implements UserService {
         userModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
+        log.info("c=UserServiceImpl m=registerUser userName={} email={} msg=User saved successfully", userRecordDTO.username(), userRecordDTO.email());
         return userRepository.save(userModel);
+
     }
 
     @Override
@@ -84,7 +92,7 @@ public class UserServiceImpl implements UserService {
         user.setFullName(userRecordDTO.fullName());
         user.setPhoneNumber(userRecordDTO.phoneNumber());
         user.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
-
+        log.info("c=UserServiceImpl m=updateUser msg=Updating user userId={} userData={}", userId, userRecordDTO);
         return userRepository.save(user);
     }
 
