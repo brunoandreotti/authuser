@@ -69,7 +69,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private LocalDateTime updatedAt;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserCourseModel> userCourses;
 
 }
