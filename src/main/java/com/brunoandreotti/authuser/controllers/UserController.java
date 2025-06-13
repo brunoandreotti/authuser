@@ -37,7 +37,7 @@ public class UserController {
 
         if (!userPages.isEmpty()) {
             for (UserModel user : userPages.toList()) {
-                user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(user.getId())).withSelfRel());
+                user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(user.getUserId())).withSelfRel());
             }
         }
         log.info("c=UserController m=getAllUsers msg=GET getAllUsers");

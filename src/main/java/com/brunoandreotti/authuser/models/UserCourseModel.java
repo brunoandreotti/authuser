@@ -26,5 +26,6 @@ public class UserCourseModel implements Serializable {
     private UUID courseId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
     private UserModel user;
 }
