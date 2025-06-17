@@ -72,4 +72,11 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserCourseModel> userCourses;
 
+    public UserCourseModel toUserCourseModel (UUID courseId) {
+        UserCourseModel userCourse = new UserCourseModel();
+        userCourse.setCourseId(courseId);
+        userCourse.setUser(this);
+
+        return userCourse;
+    }
 }
