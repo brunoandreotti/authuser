@@ -1,5 +1,6 @@
 package com.brunoandreotti.authuser.services;
 
+import com.brunoandreotti.authuser.dtos.InstructorRecordDTO;
 import com.brunoandreotti.authuser.dtos.UserRecordDTO;
 import com.brunoandreotti.authuser.models.UserModel;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,6 @@ public interface UserService {
     UserModel updateUserImage(UUID userId, UserRecordDTO userRecordDTO);
 
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
+
+    UserModel registerInstructor(InstructorRecordDTO instructorRecordDTO);
 }

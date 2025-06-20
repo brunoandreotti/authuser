@@ -1,5 +1,6 @@
 package com.brunoandreotti.authuser.services.impl;
 
+import com.brunoandreotti.authuser.dtos.InstructorRecordDTO;
 import com.brunoandreotti.authuser.dtos.UserRecordDTO;
 import com.brunoandreotti.authuser.enums.UserStatus;
 import com.brunoandreotti.authuser.enums.UserType;
@@ -40,6 +41,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public UserModel registerInstructor(InstructorRecordDTO instructorRecordDTO) {
+        UserModel user = findById(instructorRecordDTO.userId());
+
+        user.setUserType(UserType.INSTRUCTOR);
+        user.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        return userRepository.save(user);
     }
 
     @Override
