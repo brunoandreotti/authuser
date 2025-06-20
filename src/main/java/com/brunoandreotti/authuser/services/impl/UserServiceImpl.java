@@ -6,7 +6,9 @@ import com.brunoandreotti.authuser.enums.UserStatus;
 import com.brunoandreotti.authuser.enums.UserType;
 import com.brunoandreotti.authuser.exceptions.NotFoundException;
 import com.brunoandreotti.authuser.exceptions.DataAlreadyExistsException;
+import com.brunoandreotti.authuser.models.UserCourseModel;
 import com.brunoandreotti.authuser.models.UserModel;
+import com.brunoandreotti.authuser.repository.UserCourseRepository;
 import com.brunoandreotti.authuser.repository.UserRepository;
 import com.brunoandreotti.authuser.services.UserService;
 import com.brunoandreotti.authuser.specifications.SpecificationTemplate;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,9 +31,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     final private UserRepository userRepository;
+    final private UserCourseRepository userCourseRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserCourseRepository userCourseRepository) {
         this.userRepository = userRepository;
+        this.userCourseRepository = userCourseRepository;
     }
 
     @Override
@@ -59,8 +64,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
+    @Transactional
     @Override
     public void deleteById(UUID userId) {
+        List<UserCourseModel> userCourseList = userCourseRepository.findAllUserCoursesIntoUser(userId);
+
+        if (!userCourseList.isEmpty()) {
+            userCourseRepository.deleteAll(userCourseList);
+        }
+
         log.info("c=UserController m=deleteById msg=Deleting user by id userId={}", userId);
         userRepository.delete(findById(userId));
     }
