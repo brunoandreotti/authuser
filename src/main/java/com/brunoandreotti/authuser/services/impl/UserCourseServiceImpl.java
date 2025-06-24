@@ -1,6 +1,7 @@
 package com.brunoandreotti.authuser.services.impl;
 
 import com.brunoandreotti.authuser.dtos.UserCourseRecordDTO;
+import com.brunoandreotti.authuser.exceptions.NotFoundException;
 import com.brunoandreotti.authuser.exceptions.SubscriptionAlreadyExistsException;
 import com.brunoandreotti.authuser.models.UserCourseModel;
 import com.brunoandreotti.authuser.models.UserModel;
@@ -8,6 +9,7 @@ import com.brunoandreotti.authuser.repository.UserCourseRepository;
 import com.brunoandreotti.authuser.services.UserCourseService;
 import com.brunoandreotti.authuser.services.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -46,5 +48,18 @@ public class UserCourseServiceImpl implements UserCourseService {
     @Override
     public UserCourseModel save(UserCourseModel userCourseModel) {
         return userCourseRepository.save(userCourseModel);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserCourseByCourse(UUID courseId) {
+        Boolean existsByCourseId = userCourseRepository.existsByCourseId(courseId);
+
+        if (!existsByCourseId) {
+            throw new NotFoundException("Result with courseId " + courseId + " not found");
+        }
+
+        userCourseRepository.deleteAllByCourseId(courseId);
+
     }
 }

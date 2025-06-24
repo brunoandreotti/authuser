@@ -42,4 +42,12 @@ public class UserCourseController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userCourseService.saveSubscriptionUserInCourse(userId, userCourseRecordDTO));
     }
+
+    @DeleteMapping("/users/courses/{courseId}")
+    public ResponseEntity<Object> deleteUserCourseByCourse(
+            @PathVariable(value = "courseId") UUID courseId
+    ) {
+        userCourseService.deleteUserCourseByCourse(courseId);
+        return ResponseEntity.status(HttpStatus.OK).body("UserCourse deleted successfully");
+    }
 }
