@@ -1,5 +1,6 @@
 package com.brunoandreotti.authuser.services.impl;
 
+import com.brunoandreotti.authuser.clients.CourseClient;
 import com.brunoandreotti.authuser.dtos.InstructorRecordDTO;
 import com.brunoandreotti.authuser.dtos.UserRecordDTO;
 import com.brunoandreotti.authuser.enums.UserStatus;
@@ -32,10 +33,12 @@ public class UserServiceImpl implements UserService {
 
     final private UserRepository userRepository;
     final private UserCourseRepository userCourseRepository;
+    final private CourseClient courseClient;
 
-    public UserServiceImpl(UserRepository userRepository, UserCourseRepository userCourseRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserCourseRepository userCourseRepository, CourseClient courseClient) {
         this.userRepository = userRepository;
         this.userCourseRepository = userCourseRepository;
+        this.courseClient = courseClient;
     }
 
     @Override
@@ -71,6 +74,7 @@ public class UserServiceImpl implements UserService {
 
         if (!userCourseList.isEmpty()) {
             userCourseRepository.deleteAll(userCourseList);
+            courseClient.deleteCourseUserInCourse(userId);
         }
 
         log.info("c=UserController m=deleteById msg=Deleting user by id userId={}", userId);

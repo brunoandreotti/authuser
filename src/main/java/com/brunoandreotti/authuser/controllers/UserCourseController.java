@@ -18,11 +18,10 @@ import java.util.UUID;
 @RestController
 public class UserCourseController {
 
-    private final CourseClient courseClient;
+
     private final UserCourseService userCourseService;
 
-    public UserCourseController(CourseClient courseClient, UserCourseService userCourseService) {
-        this.courseClient = courseClient;
+    public UserCourseController(UserCourseService userCourseService) {
         this.userCourseService = userCourseService;
     }
 
@@ -31,7 +30,7 @@ public class UserCourseController {
             @PathVariable(value = "userId") UUID userId,
             @PageableDefault(sort = "courseId", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(courseClient.getAllCoursesByUser(userId, pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(userCourseService.getAllCoursesByUser(userId, pageable));
     }
 
     @PostMapping("/users/{userId}/courses/subscription")

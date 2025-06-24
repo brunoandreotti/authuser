@@ -2,6 +2,7 @@ package com.brunoandreotti.authuser.clients;
 
 import com.brunoandreotti.authuser.dtos.CourseRecordDTO;
 import com.brunoandreotti.authuser.dtos.ResponsePageDTO;
+import com.brunoandreotti.authuser.exceptions.ClientErrorException;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,5 +49,20 @@ public class CourseClient {
            log.error("Error Request RestClient with cause: {}", ex.getMessage());
            throw new RuntimeException("Error Request RestClient", ex);
         }
+    }
+
+    public void deleteCourseUserInCourse(UUID userId) {
+        String url = courseBaseUrl + String.format("/courses/users/%s", userId);
+
+        log.info("DELETE - deleteCourseUserInCourse");
+        restClient.delete()
+                .uri(url)
+                .retrieve()
+                .onStatus(status -> !status.is2xxSuccessful(),
+                        (request, response) -> {
+                            log.error("Error Request deleteCourseUserInCourse with cause: {}", response.getBody().toString());
+                            throw new ClientErrorException("Error Request RestClient deleteCourseUserInCourse", response.getStatusCode().value());
+                        })
+                .toBodilessEntity();
     }
 }

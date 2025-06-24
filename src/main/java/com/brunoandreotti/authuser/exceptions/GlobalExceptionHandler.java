@@ -50,4 +50,12 @@ public class GlobalExceptionHandler {
         log.error("SubscriptionAlreadyExistsException message: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
+
+    @ExceptionHandler(ClientErrorException.class)
+    private ResponseEntity<ErrorResponse> handleClientErrorException(ClientErrorException ex) {
+        int httpStatus = ex.getStatus() != null ? ex.getStatus() : 400;
+        ErrorResponse errorResponse = new ErrorResponse(httpStatus, ex.getMessage(), null);
+        log.error("ClientErrorException message: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.valueOf(httpStatus)).body(errorResponse);
+    }
 }
